@@ -1,0 +1,10 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "no-empty-source": null,
+    "plugin/no-unsupported-browser-features": [true, { "severity": "warning" }]
+  },
+  "plugins": [
+    "stylelint-no-unsupported-browser-features"
+  ]
+}
