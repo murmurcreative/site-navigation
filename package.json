@@ -1,20 +1,21 @@
 {
-  "name": "menu-web-component",
+  "name": "site-navigation",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/site-navigation.js",
   "scripts": {
     "build": "webpack"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.37",
     "@babel/preset-env": "^7.0.0-beta.37",
     "babel-loader": "^8.0.0-beta.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "css-loader": "^0.28.8",
+    "cssnano": "^3.10.0",
     "document-register-element": "^1.7.0",
     "eslint": "^4.15.0",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -22,13 +23,12 @@
     "postcss-cssnext": "^3.0.2",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.10",
+    "redom": "^3.8.10",
     "style-loader": "^0.19.1",
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^18.0.0",
     "stylelint-no-unsupported-browser-features": "^2.0.0",
     "webpack": "^3.10.0"
   },
-  "dependencies": {
-    "cssnano": "^3.10.0"
-  }
+  "dependencies": {}
 }
