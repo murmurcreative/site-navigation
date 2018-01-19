@@ -1,3 +1,7 @@
+.site-navigation__menu[hidden] {
+  display: none;
+}
+
 .site-navigation__menuTopmenu,
 .site-navigation__menuSubmenu {
   list-style: none;
@@ -8,10 +12,6 @@
 .site-navigation__menuTopmenu {
   display: flex;
   align-items: flex-start;
-}
-
-.site-navigation__menuSubmenu {
-  opacity: 0;
 }
 
 .site-navigation__menuItem {

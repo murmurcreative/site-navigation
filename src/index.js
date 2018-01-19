@@ -1,21 +1,8 @@
 import 'document-register-element'
-import { el, mount, text } from 'redom'
 import './index.css'
 
 const targetName = `simpleMenu`
 const elName = `site-navigation`
-
-class Toggle {
-  constructor () {
-    let attrs = {}
-    attrs[`aria-expanded`] = `false`
-
-    this.el = el(`button.${elName}__menuToggle`, `toggle`, attrs)
-    this.el.onclick = click => {
-      click.target.setAttribute(`aria-expanded`, `true`)
-    }
-  }
-}
 
 function getElements(navigator)
 {
@@ -35,21 +22,42 @@ function parseMenu(menu)
   let items = menu.querySelectorAll(`li`)
   let links = menu.querySelectorAll(`li > a`)
   let submenus = menu.querySelectorAll(`li > ul`)
+  let toggles = menu.querySelectorAll(`button[toggle]`)
+  let menus = menu.querySelectorAll(`nav ul`)
   let topmenu = menu.querySelectorAll(`nav > ul`)
 
+  // Initial parse for items.
   items.forEach(item => {
     item.classList.add(`${elName}__menuItem`)
     if (item.querySelector(`ul`)) {
       item.classList.add(`${elName}__menuItem--parent`)
-      mount(item, new Toggle())
     }
   })
+
+  // Initial parse for links.
   links.forEach(el => {el.classList.add(`${elName}__menuLink`)})
+
+  // Initial parse for submenus.
   submenus.forEach(el => {
     el.classList.add(`${elName}__menuSubmenu`)
   })
+
+  // Initial parse for menus (all of them).
+  menus.forEach(el => {
+    el.classList.add(`${elName}__menu`)
+    el.setAttribute(`hidden`, ``)
+  })
+
+  // Initial parse for top menu.
   topmenu.forEach(el => {el.classList.add(`${elName}__menuTopmenu`)})
 
+  // Initial parse for toggles.
+  toggles.forEach(el => el.addEventListener(`click`, function() {
+    let expanded = this.getAttribute('aria-expanded') === 'true' || false;
+    this.setAttribute('aria-expanded', !expanded);
+    let menu = this.nextElementSibling;
+    menu.hidden = !menu.hidden;
+  }))
   return {
     items: items,
     links: links,
