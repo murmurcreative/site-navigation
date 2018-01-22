@@ -11,8 +11,8 @@
 <body>
   <site-navigation>
     <nav class="simpleMenu site-navigation__menu">
-      <button class="simpleMenu__toggle" toggle>Open</button>
-      <ul class="simpleMenu__menu level-0">
+      <button class="simpleMenu__toggle" toggle opened="X" closed="☰">Open</button>
+      <ul class="simpleMenu__menu level-0" id="top-level">
         <li class="simpleMenu__item">
           <a href="http://server.test/2018/01/05/home/" class="simpleMenu__link">Home</a>
         </li>
@@ -22,11 +22,11 @@
         <li class="simpleMenu__item">
           <a href="http://server.test/sample-page/" class="simpleMenu__link">Sample Page</a>
           <button class="simpleMenu__toggle" toggle>Open</button>
-          <ul class="simpleMenu__menu simpleMenu__menu--submenu level-1">
+          <ul class="simpleMenu__menu simpleMenu__menu--submenu level-1" id="level-1">
             <li class="simpleMenu__item">
               <a href="http://server.test/another-page/" class="simpleMenu__link">Another Page</a>
               <button class="simpleMenu__toggle" toggle>Open</button>
-              <ul class="simpleMenu__menu simpleMenu__menu--submenu level-2">
+              <ul class="simpleMenu__menu simpleMenu__menu--submenu level-2" id="level-2">
                 <li class="simpleMenu__item">
                   <a href="http://server.test/2017/07/20/hello-world/" class="simpleMenu__link">Uncategorized</a>
                 </li>
