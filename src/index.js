@@ -3,7 +3,6 @@ import shortid from 'shortid'
 import './index.css'
 
 
-const targetName = `simpleMenu`
 const elName = `site-navigation`
 
 function getElements(navigator)
@@ -89,6 +88,9 @@ function setupMenu(navigation)
   }
 
   let menuEl = navigation.menu
+  let toggleOpened = menuEl.dataset.opened || `Close`
+  let toggleClosed = menuEl.dataset.closed || `Open`
+
   let items = menuEl.querySelectorAll(`li`)
   let links = menuEl.querySelectorAll(`li > a`)
   let submenus = menuEl.querySelectorAll(`li > ul`)
@@ -138,11 +140,8 @@ function setupMenu(navigation)
     }
 
     // Store opened/closed glyph info on the element.
-    el.dataset.opened = el.getAttribute(`opened`) || `Close`
-    el.dataset.closed = el.getAttribute(`closed`) || `Open`
-    // ...then clean up the HTML
-    el.removeAttribute('opened')
-    el.removeAttribute('closed')
+    el.dataset.opened = el.dataset.opened || toggleOpened
+    el.dataset.closed = el.dataset.closed || toggleClosed
 
     // Should always start closed.
     el.textContent = el.dataset.closed
@@ -171,8 +170,8 @@ const SiteNavigation = document.registerElement(
       createdCallback: {value: function() {
         console.log('here I am ^_^ ');
         let navigation = getElements(this)
-        let menu = setupMenu(navigation);
-        console.log('with content: ', menu);
+        let menu = setupMenu(navigation)
+        console.log('with content: ', navigation);
       }},
       attachedCallback: {value: function() {
         console.log('live on DOM ;-) ');

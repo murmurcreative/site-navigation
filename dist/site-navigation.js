@@ -209,7 +209,6 @@ __webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var targetName = "simpleMenu";
 var elName = "site-navigation";
 
 function getElements(navigator) {
@@ -291,6 +290,8 @@ function setupMenu(navigation) {
   }
 
   var menuEl = navigation.menu;
+  var toggleOpened = menuEl.dataset.opened || "Close";
+  var toggleClosed = menuEl.dataset.closed || "Open";
   var items = menuEl.querySelectorAll("li");
   var links = menuEl.querySelectorAll("li > a");
   var submenus = menuEl.querySelectorAll("li > ul");
@@ -336,11 +337,8 @@ function setupMenu(navigation) {
     } // Store opened/closed glyph info on the element.
 
 
-    el.dataset.opened = el.getAttribute("opened") || "Close";
-    el.dataset.closed = el.getAttribute("closed") || "Open"; // ...then clean up the HTML
-
-    el.removeAttribute('opened');
-    el.removeAttribute('closed'); // Should always start closed.
+    el.dataset.opened = el.dataset.opened || toggleOpened;
+    el.dataset.closed = el.dataset.closed || toggleClosed; // Should always start closed.
 
     el.textContent = el.dataset.closed; // Create CustomEvent to fire later.
 
@@ -369,7 +367,7 @@ var SiteNavigation = document.registerElement('site-navigation', {
         console.log('here I am ^_^ ');
         var navigation = getElements(this);
         var menu = setupMenu(navigation);
-        console.log('with content: ', menu);
+        console.log('with content: ', navigation);
       }
     },
     attachedCallback: {
