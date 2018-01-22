@@ -214,9 +214,9 @@ var elName = "site-navigation";
 
 function getElements(navigator) {
   return {
-    branding: navigator.querySelector("".concat(targetName, "__branding")),
-    menu: navigator.querySelector(".simpleMenu"),
-    search: navigator.querySelector("".concat(targetName, "__search"))
+    branding: navigator.querySelector("[data-branding]") || navigator.querySelector(".branding"),
+    menu: navigator.querySelector("[data-menu]") || navigator.querySelector(".menu"),
+    search: navigator.querySelector("[data-search]") || navigator.querySelector(".search")
   };
 }
 
@@ -294,13 +294,12 @@ function setupMenu(navigation) {
   var items = menuEl.querySelectorAll("li");
   var links = menuEl.querySelectorAll("li > a");
   var submenus = menuEl.querySelectorAll("li > ul");
-  var toggles = menuEl.querySelectorAll("button[toggle]");
+  var toggles = menuEl.querySelectorAll("[data-toggle]");
   var menus = menuEl.querySelectorAll("nav ul");
   var topmenu = menuEl.querySelectorAll("nav > ul"); // Initial parse for menus (all of them).
 
   menus.forEach(function (el) {
     el.classList.add("".concat(elName, "__menu"));
-    el.setAttribute("nav-element", "menu");
     el.setAttribute("hidden", "");
     el.setAttribute("id", el.getAttribute("id") || _shortid.default.generate()); // Listen for this menu being toggled.
 
@@ -313,26 +312,21 @@ function setupMenu(navigation) {
 
   submenus.forEach(function (el) {
     el.classList.add("".concat(elName, "__menuSubmenu"));
-    el.setAttribute("nav-element", "submenu");
   }); // Initial parse for items.
 
   items.forEach(function (el) {
-    el.setAttribute("nav-element", "item");
     el.classList.add("".concat(elName, "__menuItem"));
 
     if (el.querySelector("ul")) {
-      el.setAttribute("nav-parent", "submenu");
       el.classList.add("".concat(elName, "__parent"));
     }
   }); // Initial parse for links.
 
   links.forEach(function (el) {
-    el.setAttribute("nav-element", "link");
     el.classList.add("".concat(elName, "__menuLink"));
   }); // Initial parse for toggles.
 
   toggles.forEach(function (el) {
-    el.setAttribute("nav-element", "toggle");
     el.classList.add("".concat(elName, "__menuToggle")); // Add an aria-controls attribute to the toggle button.
 
     var menu = el.nextElementSibling;
@@ -368,7 +362,7 @@ function setupMenu(navigation) {
   };
 }
 
-var MyElement = document.registerElement('site-navigation', {
+var SiteNavigation = document.registerElement('site-navigation', {
   prototype: Object.create(HTMLElement.prototype, {
     createdCallback: {
       value: function value() {

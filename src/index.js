@@ -9,9 +9,9 @@ const elName = `site-navigation`
 function getElements(navigator)
 {
   return {
-    branding: navigator.querySelector(`${targetName}__branding`),
-    menu: navigator.querySelector(`.simpleMenu`),
-    search: navigator.querySelector(`${targetName}__search`),
+    branding: navigator.querySelector(`[data-branding]`) || navigator.querySelector(`.branding`),
+    menu: navigator.querySelector(`[data-menu]`) || navigator.querySelector(`.menu`),
+    search: navigator.querySelector(`[data-search]`) || navigator.querySelector(`.search`),
   }
 }
 
@@ -92,14 +92,13 @@ function setupMenu(navigation)
   let items = menuEl.querySelectorAll(`li`)
   let links = menuEl.querySelectorAll(`li > a`)
   let submenus = menuEl.querySelectorAll(`li > ul`)
-  let toggles = menuEl.querySelectorAll(`button[toggle]`)
+  let toggles = menuEl.querySelectorAll(`[data-toggle]`)
   let menus = menuEl.querySelectorAll(`nav ul`)
   let topmenu = menuEl.querySelectorAll(`nav > ul`)
 
   // Initial parse for menus (all of them).
   menus.forEach(el => {
     el.classList.add(`${elName}__menu`)
-    el.setAttribute(`nav-element`, `menu`)
     el.setAttribute(`hidden`, ``)
     el.setAttribute(`id`, el.getAttribute(`id`) || shortid.generate())
 
@@ -113,28 +112,23 @@ function setupMenu(navigation)
   // Initial parse for submenus.
   submenus.forEach(el => {
     el.classList.add(`${elName}__menuSubmenu`)
-    el.setAttribute(`nav-element`, `submenu`)
   })
 
   // Initial parse for items.
   items.forEach(el => {
-    el.setAttribute(`nav-element`, `item`)
     el.classList.add(`${elName}__menuItem`)
     if (el.querySelector(`ul`)) {
-      el.setAttribute(`nav-parent`, `submenu`)
       el.classList.add(`${elName}__parent`)
     }
   })
 
   // Initial parse for links.
   links.forEach(el => {
-    el.setAttribute(`nav-element`, `link`)
     el.classList.add(`${elName}__menuLink`)
   })
 
   // Initial parse for toggles.
   toggles.forEach(el => {
-    el.setAttribute(`nav-element`, `toggle`)
     el.classList.add(`${elName}__menuToggle`)
 
     // Add an aria-controls attribute to the toggle button.
@@ -169,7 +163,7 @@ function setupMenu(navigation)
   }
 }
 
-const MyElement = document.registerElement(
+const SiteNavigation = document.registerElement(
   'site-navigation',
   {
     prototype: Object.create(
