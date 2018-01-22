@@ -182,6 +182,10 @@ const MyElement = document.registerElement(
       }},
       attachedCallback: {value: function() {
         console.log('live on DOM ;-) ');
+
+        // Prevent events from leaking out into the wider DOM.
+        [`toggle-clicked`, `menu-toggled`, `toggle-state`, `menu-state`]
+          .map(event => this.addEventListener(event, e=> e.cancelBubble = true))
       }},
       detachedCallback: {value: function() {
         console.log('leaving the DOM :-( )');

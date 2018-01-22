@@ -380,7 +380,15 @@ var MyElement = document.registerElement('site-navigation', {
     },
     attachedCallback: {
       value: function value() {
-        console.log('live on DOM ;-) ');
+        var _this = this;
+
+        console.log('live on DOM ;-) '); // Prevent events from leaking out into the wider DOM.
+
+        ["toggle-clicked", "menu-toggled", "toggle-state", "menu-state"].map(function (event) {
+          return _this.addEventListener(event, function (e) {
+            return e.cancelBubble = true;
+          });
+        });
       }
     },
     detachedCallback: {
