@@ -10,26 +10,30 @@
 
 <body>
   <site-navigation>
-    <div data-branding></div>
-    <nav data-menu data-opened="X" data-closed="☰">
+    <div data-branding>
+      <a href="/">
+        <img src="/images/logo.svg">
+      </a>
+    </div>
+    <nav data-menu>
       <button data-toggle>Open</button>
-      <ul id="top-level">
+      <ul>
         <li>
-          <a href="http://server.test/2018/01/05/home/">Home</a>
+          <a href="/home/">Home</a>
         </li>
         <li>
-          <a href="http://server.test/2018/01/05/google/">Google</a>
+          <a href="/page-1/">Page One</a>
         </li>
         <li>
-          <a href="http://server.test/sample-page/">Sample Page</a>
+          <a href="/page-2/">Page Two</a>
           <button data-toggle>Open</button>
-          <ul id="level-1">
+          <ul>
             <li>
-              <a href="http://server.test/another-page/">Another Page</a>
+              <a href="/page-2/page-3/">Page Three</a>
               <button data-toggle>Open</button>
-              <ul id="level-2">
+              <ul>
                 <li>
-                  <a href="http://server.test/2017/07/20/hello-world/">Uncategorized</a>
+                  <a href="/page-2/page-3/page-4/">Page Four</a>
                 </li>
               </ul>
             </li>
@@ -37,7 +41,10 @@
         </li>
       </ul>
     </nav>
-    <div data-search></div>
+    <form data-search>
+      <input type="search">
+      <button type="submit">Search</button>
+    </form>
   </site-navigation>
   <script src="site-navigation.js"></script>
 </body>
