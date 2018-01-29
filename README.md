@@ -2,10 +2,46 @@
 
 An HTML Custom Element to make site nav a bit easier.
 
+## Installation
+
+Currently this package is intended to be added to your project with npm/yarn,
+and included in your project, likely through webpack. There are other ways you
+could include it (running webpack on this repo to generate files in `/dist`,
+for instance), but the following is the recommended process (i.e. the one I've
+tested):
+
+```bash
+$ yarn add https://github.com/alwaysblank/site-navigation.git
+```
+
+```javascript
+// main.js, or a script that will be run on all pages
+import 'site-navigation';
+```
+
+If you're using webpack, you'll need to make sure that your loaders for `js`
+and `css` aren't ignoring the `site-navigation` directory (often webpack
+configuration will ignore `node_modules`, which will prevent `site-navigation`
+from getting picked up.) As an example, in the default `webpack.config.js` for
+[roots' Sage](https://github.com/roots/sage), make the following changes:
+
+```javascript
+// resources/assets/build/webpack.config.js
+test: /\.js$/,
+exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites|site-navigation))/],
+
+//...
+
+// I removed the direct `include` in favor of this, but use whatever
+// solution works for you
+test: /\.css$/,
+exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites|site-navigation))/],
+```
+
 ## Usage
 
-To use 🗺️ site-navigation, [include custom element]. When used, it will look at
-the content you put inside it to build a menu. An example might look this this:
+When used, it will look at the content you put inside it to build a menu. An
+example might look this this:
 
 ```html
 <site-navigation>
@@ -74,7 +110,7 @@ the button.
 </li>
 ...
 ```
-*👍 Good*
+**👍 Good**
 
 
 ```html
@@ -86,7 +122,7 @@ the button.
 </li>
 ...
 ```
-*👎 Bad*
+**👎 Bad**
 
 The `<button>` does not _immediately_ preceed the nested `<ul>`.
 
@@ -98,7 +134,7 @@ The `<button>` does not _immediately_ preceed the nested `<ul>`.
 </li>
 ...
 ```
-*👎 Bad*
+**👎 Bad**
 
 There is no `<button>` for the nested `<ul>`.
 
@@ -110,7 +146,7 @@ it will apply to all buttons. If added to an individual button, it will apply
 only to that button (and override a menu-level setting).
 
 > *Note*: You don't _have_ to include text in the buttons when you initially
-> define them, since the text will be replaced as soon as the 🗺️ site-navigation
+> define them, since the text will be replaced as soon as the site-navigation
 > is added as a custom element, but adding the text is encourage, so that your
 > site will still have descriptive HTML.
 
@@ -145,7 +181,7 @@ The top-level element of this section must have either the attribute
 
 ## Events
 
-🗺️ site-navigation makes use of Custom Events in JavaScript to handle toggling
+site-navigation makes use of Custom Events in JavaScript to handle toggling
 buttons and opening/closing menus, etc. All of these events bubble up to the
-top 🗺️ site-navigation level, but no further. You can add event listeners to
-your 🗺️ site-navigation element to react to these events.
+top site-navigation level, but no further. You can add event listeners to
+`<site-navigation>` to react to these events.
