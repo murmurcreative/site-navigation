@@ -46,7 +46,9 @@ function toggleButton(el) {
   el.setAttribute('aria-expanded', !expanded);
 
   // Change the text of the button to the other thing.
-  el.textContent = expanded ? el.dataset.closed : el.dataset.opened;
+  if (el.dataset.opened && el.dataset.closed) {
+    el.textContent = expanded ? el.dataset.closed : el.dataset.opened;
+  }
 
   // Create CustomEvent to fire later.
   let toggleState = new CustomEvent(`toggle-state`, {"bubbles": true, "cancelable": true,});
@@ -86,8 +88,8 @@ function setupMenu(navigation) {
   }
 
   let menuEl = navigation.menu;
-  let toggleOpened = menuEl.dataset.opened || `Close`;
-  let toggleClosed = menuEl.dataset.closed || `Open`;
+  let toggleOpened = menuEl.dataset.opened || false;
+  let toggleClosed = menuEl.dataset.closed || false;
 
   let items = menuEl.querySelectorAll(`li`);
   let links = menuEl.querySelectorAll(`li > a`);
@@ -140,11 +142,14 @@ function setupMenu(navigation) {
     }
 
     // Store opened/closed glyph info on the element.
-    el.dataset.opened = el.dataset.opened || toggleOpened;
-    el.dataset.closed = el.dataset.closed || toggleClosed;
+    if ((el.dataset.opened && el.dataset.closed) || (toggleOpened && toggleClosed)) {
+      el.dataset.opened = el.dataset.opened || toggleOpened;
+      el.dataset.closed = el.dataset.closed || toggleClosed;
 
-    // Should always start closed.
-    el.textContent = el.dataset.closed;
+      // Should always start closed.
+      el.textContent = el.dataset.closed;
+    }
+
 
     el.toggleMenuButton = function () {
       this.dispatchEvent(new CustomEvent(`toggle-clicked`, {
