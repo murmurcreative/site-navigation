@@ -18,7 +18,10 @@ function toggleMenu(el) {
   el.hidden = !el.hidden;
 
   // Create CustomEvent to fire later.
-  let menuState = new CustomEvent(`menu-state`, {"bubbles": true, "cancelable": true,});
+  let menuState = new CustomEvent(`menu-state`, {"bubbles": true, "cancelable": true, "detail": {
+    el: el,
+    state: el.hidden ? 'closed' : 'opened',
+  }});
 
   // Fire CustomEvent to let everyone know we changed state.
   el.dispatchEvent(menuState)
@@ -51,7 +54,10 @@ function toggleButton(el) {
   }
 
   // Create CustomEvent to fire later.
-  let toggleState = new CustomEvent(`toggle-state`, {"bubbles": true, "cancelable": true,});
+  let toggleState = new CustomEvent(`toggle-state`, {"bubbles": true, "cancelable": true, "detail": {
+      el: el,
+      state: expanded ? 'closed' : 'opened',
+    }});
 
   // Fire CustomEvent to let everyone know we changed state.
   el.dispatchEvent(toggleState)
