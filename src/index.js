@@ -1,9 +1,23 @@
 import 'document-register-element'
+import 'custom-event-polyfill'
 import shortid from 'shortid'
 import './index.css'
 
 
 const elName = `site-navigation`;
+
+/**
+ * Polyfill `forEach` on NodeLists for browsers that don't support it.
+ */
+
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = function (callback, thisArg) {
+    thisArg = thisArg || window;
+    for (var i = 0; i < this.length; i++) {
+      callback.call(thisArg, this[i], i, this);
+    }
+  };
+}
 
 function getElements(navigator) {
   return {
@@ -18,10 +32,12 @@ function toggleMenu(el) {
   el.hidden = !el.hidden;
 
   // Create CustomEvent to fire later.
-  let menuState = new CustomEvent(`menu-state`, {"bubbles": true, "cancelable": true, "detail": {
-    el: el,
-    state: el.hidden ? 'closed' : 'opened',
-  }});
+  let menuState = new CustomEvent(`menu-state`, {
+    "bubbles": true, "cancelable": true, "detail": {
+      el: el,
+      state: el.hidden ? `closed` : `opened`,
+    },
+  });
 
   // Fire CustomEvent to let everyone know we changed state.
   el.dispatchEvent(menuState)
@@ -42,11 +58,11 @@ function handleMenuToggle(e) {
  */
 function toggleButton(el) {
   // Determine the current state of this button.
-  let expanded = el.getAttribute('aria-expanded') === 'true' || false;
+  let expanded = el.getAttribute(`aria-expanded`) === `true` || false;
 
   // Swap the aria-expanded attributed to the opposite,
   // since we're changing the state.
-  el.setAttribute('aria-expanded', !expanded);
+  el.setAttribute(`aria-expanded`, !expanded);
 
   // Change the text of the button to the other thing.
   if (el.dataset.opened && el.dataset.closed) {
@@ -54,10 +70,12 @@ function toggleButton(el) {
   }
 
   // Create CustomEvent to fire later.
-  let toggleState = new CustomEvent(`toggle-state`, {"bubbles": true, "cancelable": true, "detail": {
+  let toggleState = new CustomEvent(`toggle-state`, {
+    "bubbles": true, "cancelable": true, "detail": {
       el: el,
-      state: expanded ? 'closed' : 'opened',
-    }});
+      state: expanded ? `closed` : `opened`,
+    },
+  });
 
   // Fire CustomEvent to let everyone know we changed state.
   el.dispatchEvent(toggleState)
@@ -82,7 +100,7 @@ function handleButtonToggle(e) {
   let menuToggled = new CustomEvent(`menu-toggled`, {
     "bubbles": true,
     "cancelable": true,
-    "detail": {"menuid": menuid}
+    "detail": {"menuid": menuid},
   });
   let menu = document.getElementById(el.getAttribute(`aria-controls`));
   menu.dispatchEvent(menuToggled)
@@ -158,10 +176,10 @@ function setupMenu(navigation) {
 
 
     el.toggleMenuButton = function () {
-      this.dispatchEvent(new CustomEvent(`toggle-clicked`, {
+      el.dispatchEvent(new CustomEvent(`toggle-clicked`, {
         "bubbles": true,
         "cancelable": true,
-        "detail": {"menuid": this.getAttribute('aria-controls')}
+        "detail": {"menuid": this.getAttribute(`aria-controls`)},
       }));
     };
 
@@ -180,46 +198,47 @@ function setupMenu(navigation) {
 }
 
 const SiteNavigation = document.registerElement(
-  'site-navigation',
+  `site-navigation`,
   {
     prototype: Object.create(
       HTMLElement.prototype, {
         createdCallback: {
           value: function () {
             setupMenu(getElements(this));
-          }
+          },
         },
         attachedCallback: {
           value: function () {
             // Prevent events from leaking out into the wider DOM.
             [`toggle-clicked`, `menu-toggled`, `toggle-state`, `menu-state`]
               .map(event => this.addEventListener(event, e => e.cancelBubble = true))
-          }
+          },
         },
         detachedCallback: {
-          value: function () {}
+          value: function () {
+          },
         },
         attributeChangedCallback: {
           value: function (name, previousValue, value) {
             if (previousValue == null) {
               console.log(
-                'got a new attribute ', name,
-                ' with value ', value
+                `got a new attribute `, name,
+                ` with value `, value
               );
             } else if (value == null) {
               console.log(
-                'somebody removed ', name,
-                ' its value was ', previousValue
+                `somebody removed `, name,
+                ` its value was `, previousValue
               );
             } else {
               console.log(
                 name,
-                ' changed from ', previousValue,
-                ' to ', value
+                ` changed from `, previousValue,
+                ` to `, value
               );
             }
-          }
-        }
-      })
+          },
+        },
+      }),
   }
 );

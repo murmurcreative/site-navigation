@@ -17,6 +17,8 @@
     "css-loader": "^0.28.8",
     "cssnano": "^3.10.0",
     "eslint": "^4.15.0",
+    "eslint-plugin-compat": "^2.2.0",
+    "eslint-plugin-import": "^2.10.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "postcss": "^6.0.16",
     "postcss-cssnext": "^3.0.2",
@@ -29,8 +31,8 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
-    "document-register-element": "^1.7.0",
     "custom-event-polyfill": "^0.3.0",
+    "document-register-element": "^1.7.0",
     "shortid": "^2.2.8"
   }
 }
