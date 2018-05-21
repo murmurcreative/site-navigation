@@ -185,7 +185,7 @@ function setupMenu(navigation) {
 
     // Set up a click listener.
     el.addEventListener(`toggle-clicked`, handleButtonToggle);
-    el.addEventListener(`click`, button => button.target.toggleMenuButton())
+    el.addEventListener(`click`, () => el.toggleMenuButton())
 
   });
 
