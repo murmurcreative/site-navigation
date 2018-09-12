@@ -19,12 +19,95 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   };
 }
 
-function getElements(navigator) {
-  return {
-    branding: navigator.querySelector(`[data-branding]`) || navigator.querySelector(`.branding`),
-    menu: navigator.querySelector(`[data-menu]`) || navigator.querySelector(`.menu`),
-    search: navigator.querySelector(`[data-search]`) || navigator.querySelector(`.search`),
+/**
+ * Polfill `Element.matches`.
+ */
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector;
+}
+
+/**
+ * Returns the nearest sibling to the passed element.
+ *
+ * In some browsers, this will be an empty text node, so passing selectors is
+ * recommended.
+ *
+ * @param {HTMLElement} el - The current element
+ * @param {string} [direction=`previous`] - Which direction to look
+ * @param {string} [selector=null] - Should this match a selector
+ */
+function getSibling(el, direction = `previous`, selector = null) {
+  let sibling = null;
+
+  if (direction === `previous`) {
+    sibling = el.previousSibling;
+  } else if (direction === `next`) {
+    sibling = el.nextElementSibling;
   }
+
+  if (selector !== null) {
+    if (!sibling.matches(selector)) {
+      return getSibling(sibling);
+    }
+  }
+
+  return sibling;
+}
+
+/**
+ * Get all of the toggles to manipulate in this navigator.
+ * @param {HTMLElement} navigation
+ */
+function getToggleElements(navigation) {
+  return navigation.querySelectorAll(`[data-toggle]`);
+}
+
+/**
+ * Get all of the drawers to manipulate in this navigator.
+ *
+ * @param {HTMLElement} navigation
+ */
+function getDrawerElements(navigation) {
+  return navigation.querySelectorAll(`[data-drawer]`);
+}
+
+/**
+ * Get the toggle for a given drawer.
+ * @param {HTMLElement} drawer
+ */
+function getDrawerToggle(drawer) {
+  return getSibling(drawer, `previous`, `[data-toggle]`);
+}
+
+/**
+ * Get the drawer for a given toggle.
+ * @param {HTMLElement} toggle
+ */
+function getToggleDrawer(toggle) {
+  return getSibling(toggle, `next`, `[data-drawer], ul`);
+}
+
+/**
+ * Swaps the "open" state of the drawer.
+ * @param {HTMLElement} drawer
+ */
+function doToggleDrawerState(drawer) {
+  let hidden = drawer.hasAttribute(`hidden`);
+  if (hidden) {
+    drawer.removeAttribute(`hidden`);
+  } else {
+    drawer.setAttribute(`hidden`, ``);
+  }
+}
+
+/**
+ * Gets this party started 🎶💃
+ * @param {HTMLElement} navigation
+ */
+function doNavigationSetup(navigation) {
+  Array.from(getToggleElements(navigation), (toggle) => {
+    toggle.addEventListener(`click`, () => doToggleDrawerState(getToggleDrawer(toggle)));
+  });
 }
 
 
@@ -204,7 +287,7 @@ const SiteNavigation = document.registerElement(
       HTMLElement.prototype, {
         createdCallback: {
           value: function () {
-            setupMenu(getElements(this));
+            doNavigationSetup(this);
           },
         },
         attachedCallback: {
