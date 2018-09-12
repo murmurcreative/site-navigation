@@ -40,7 +40,7 @@ function getSibling(el, direction = `previous`, selector = null) {
   let sibling = null;
 
   if (direction === `previous`) {
-    sibling = el.previousSibling;
+    sibling = el.previousElementSibling;
   } else if (direction === `next`) {
     sibling = el.nextElementSibling;
   }
@@ -91,13 +91,28 @@ function getToggleDrawer(toggle) {
  * Swaps the "open" state of the drawer.
  * @param {HTMLElement} drawer
  */
-function doToggleDrawerState(drawer) {
-  let hidden = drawer.hasAttribute(`hidden`);
+function doSwapDrawerState(drawer) {
+  const hidden = drawer.hasAttribute(`hidden`);
+
   if (hidden) {
     drawer.removeAttribute(`hidden`);
+    doSetToggleState(getDrawerToggle(drawer), true);
   } else {
     drawer.setAttribute(`hidden`, ``);
+    doSetToggleState(getDrawerToggle(drawer), false);
   }
+
+  // Fire CustomEvent to let everyone know we changed state.
+  drawer.dispatchEvent(new CustomEvent(`drawer-state-change`, {
+    "bubbles": true, "cancelable": true, "detail": {
+      el: drawer,
+      action: hidden ? `opened` : `closed`,
+    },
+  }));
+}
+
+function doSetToggleState(toggle, expanded) {
+  toggle.setAttribute(`aria-expanded`, expanded);
 }
 
 /**
@@ -106,7 +121,15 @@ function doToggleDrawerState(drawer) {
  */
 function doNavigationSetup(navigation) {
   Array.from(getToggleElements(navigation), (toggle) => {
-    toggle.addEventListener(`click`, () => doToggleDrawerState(getToggleDrawer(toggle)));
+    /**
+     * All toggles need to have `aria-expanded` and state flows from the drawers;
+     * Therefore before we do anything else we will set the `aria-expanded` state
+     * based on the current state of the drawers. Any existing state on the buttons
+     * will be overridden.
+     */
+    toggle.setAttribute(`aria-expanded`, !getToggleDrawer(toggle).hasAttribute(`hidden`));
+
+    toggle.addEventListener(`click`, () => doSwapDrawerState(getToggleDrawer(toggle)));
   });
 }
 
@@ -293,7 +316,7 @@ const SiteNavigation = document.registerElement(
         attachedCallback: {
           value: function () {
             // Prevent events from leaking out into the wider DOM.
-            [`toggle-clicked`, `menu-toggled`, `toggle-state`, `menu-state`]
+            [`drawer-state-change`]
               .map(event => this.addEventListener(event, e => e.cancelBubble = true))
           },
         },
