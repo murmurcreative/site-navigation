@@ -2,51 +2,71 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
 
 <body>
-  <site-navigation>
-    <div data-branding>
-      <a href="/">
-        <img src="/images/logo.svg">
-      </a>
-    </div>
-    <nav data-menu>
-      <button data-toggle>Open</button>
+<site-navigation class="butts">
+  <nav>
+    <button data-toggle>Button</button>
+    <div data-drawer>
       <ul>
-        <li>
-          <a href="/home/">Home</a>
-        </li>
-        <li>
-          <a href="/page-1/">Page One</a>
-        </li>
-        <li>
-          <a href="/page-2/">Page Two</a>
-          <button data-toggle>Open</button>
-          <ul>
-            <li>
-              <a href="/page-2/page-3/">Page Three</a>
-              <button data-toggle>Open</button>
+          <li>
+              <a href="/home/">Home</a>
+          </li>
+          <li>
+              <a href="/page-1/">Page One</a>
+          </li>
+          <li>
+              <a href="/page-2/">Page Two</a>
+              <button data-toggle>Button</button>
               <ul>
-                <li>
-                  <a href="/page-2/page-3/page-4/">Page Four</a>
-                </li>
+                  <li>
+                      <a href="/page-2/page-3/">Page Three</a>
+                      <button data-toggle>Button</button>
+                      <ul>
+                          <li>
+                              <a href="/page-2/page-3/page-4/">Page Four</a>
+                          </li>
+                      </ul>
+                  </li>
               </ul>
-            </li>
-          </ul>
-        </li>
+          </li>
       </ul>
-    </nav>
-    <form data-search>
-      <input type="search">
-      <button type="submit">Search</button>
-    </form>
-  </site-navigation>
-  <script src="site-navigation.js"></script>
+    </div>
+
+    <button data-toggle>Button</button>
+    <div data-drawer>
+      <ul>
+          <li>
+              <a href="/home/">Home</a>
+          </li>
+          <li>
+              <a href="/page-1/">Page One</a>
+          </li>
+          <li>
+              <a href="/page-2/">Page Two</a>
+              <button data-toggle>Button</button>
+              <ul>
+                  <li>
+                      <a href="/page-2/page-3/">Page Three</a>
+                      <button data-toggle>Button</button>
+                      <ul>
+                          <li>
+                              <a href="/page-2/page-3/page-4/">Page Four</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+    </div>
+  </nav>
+</site-navigation>
+<script src="site-navigation.js"></script>
 </body>
 
 </html>

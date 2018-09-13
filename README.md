@@ -28,79 +28,112 @@ from getting picked up.) As an example, in the default `webpack.config.js` for
 ```javascript
 // resources/assets/build/webpack.config.js
 test: /\.js$/,
-exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites|site-navigation))/],
+exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites))/],
 
-//...
+//...to this:
 
-// I removed the direct `include` in favor of this, but use whatever
-// solution works for you
 test: /\.css$/,
 exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites|site-navigation))/],
 ```
 
 ## Usage
 
-When used, it will look at the content you put inside it to build a menu. An
-example might look this this:
+When used, **site-navigation** will look at the content you put inside it to
+build a menu. An example might look this this:
 
 ```html
 <site-navigation>
-  <div data-branding>
-    <a href="/">
-      <img src="/images/logo.svg">
-    </a>
-  </div>
-  <nav data-menu>
-    <button data-toggle>Open</button>
-    <ul>
-      <li>
-        <a href="/home/">Home</a>
-      </li>
-      <li>
-        <a href="/page-1/">Page One</a>
-      </li>
-      <li>
-        <a href="/page-2/">Page Two</a>
-        <button data-toggle>Open</button>
-        <ul>
-          <li>
-            <a href="/page-2/page-3/">Page Three</a>
-            <button data-toggle>Open</button>
-            <ul>
-              <li>
-                <a href="/page-2/page-3/page-4/">Page Four</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
+  <nav>
+    <div data-drawer>
+      <button data-toggle>Open</button>
+      <ul>
+        <li>
+          <a href="/home/">Home</a>
+        </li>
+        <li>
+          <a href="/page-1/">Page One</a>
+        </li>
+        <li>
+          <a href="/page-2/">Page Two</a>
+          <button data-toggle>Open</button>
+          <ul>
+            <li>
+              <a href="/page-2/page-3/">Page Three</a>
+              <button data-toggle>Open</button>
+              <ul>
+                <li>
+                  <a href="/page-2/page-3/page-4/">Page Four</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </nav>
-  <form data-search>
-    <input type="search">
-    <button type="submit">Search</button>
-  </form>
 </site-navigation>
 ```
 
-Each section (branding, menu, search) has some rules for how it should must be
-formatted in order for 🗺️ site-navigation to pick up on it correctly.
+> **Note:** The above reflects a recommended layout: a `<nav>` nested in the master
+> `<site-navigation>` element, with `<div>`s as top-level drawers and `<ul>`s as nested
+> drawers. This is the easiest to understand, and the most accessible. **site-navigation**
+> is flexible enough to support many different layouts, however, so long as you follow
+> the rules below.
 
-### Branding
-The top-level element of this section must have either the attribute
-`data-branding` or the class `branding`. `data-branding` is preferred.
+### Drawers
 
-### Menu
-The top-level element of this section must have either the attribute
-`data-menu` or the class `menu`. `data-menu` is preferred. The use of a `nav`
-as this top-level element is recommended.
+A Drawer is a section of content that will be hidden and show when its associated toggle
+is clicked. A Drawer can contain whatever you want it to (even other Drawers!) but it will
+usually contain a list of navigational links. The rules for setting up a drawer are as follows:
 
-Menus must be `<ul>`s containing `<li>`. Nested menus follow the same
-convention. Each `<ul>` must be _immediately_ preceeded by a `<button>` with the
-attribute `data-toggle`. Any other content for the list item should come before
-the button.
+1. Your drawer can be any block-level element, but it must meet one of the following criteria:
+  a. Have the attribute `data-drawer`
+  b. Directly follow a Toggle
+2. Your drawer must *directly preceeded* by a Toggle.
 
-#### Nested Menu Examples
+Drawers represent the single source of truth about their state: Toggles take their stage
+from their associated drawers. This means that if you want to determine or set the state of
+a Drawer programmatically, you should do so through the Drawer itself, not a Toggle.
+**site-navigation** only recognizes Drawers and Toggles in pairs: If you have only one, it
+will simple ignore that element.
+
+#### Opening/Closing Drawers Programatically
+
+There are three functions attached to each Drawer which **site-navigation** uses internally
+to handle opening and closing Drawers:
+
+- `toggleDrawer()` - Switches the state of the Drawer.
+- `openDrawer()` - Opens the Drawer. Has no effect if the Drawer is already open.
+- `closeDrawer()` - Closes the Drawer. Has no effect if the Drawer is already closed.
+
+##### Example
+
+```js
+// Let's assume you have a Drawer with the ID `location-list`, which is currently closed.
+
+document.getElementByID(`location-list`).toggleDrawer();
+// The Drawer is now open.
+
+document.getElementByID(`location-list`).openDrawer();
+// The state of the Drawer has not changed.
+
+document.getElementByID(`location-list`).closeDrawer();
+// The Drawer is now closed.
+```
+
+### Toggles
+
+Toggles are the buttons used to open and close Drawers. They must obey the following rules:
+
+1. Have the attribute `data-toggle`
+2. Directly preceed a Drawer
+3. Be a `<button>`
+
+> **Note:** Technically, a toggle can be any element which will dispatch the `click` event
+> when clicked, but in practice and for accessibility reasons they should almost always be
+> `<button>`s.
+
+#### Examples
 ```html
 ...
 <li>
@@ -124,7 +157,7 @@ the button.
 ```
 **👎 Bad**
 
-The `<button>` does not _immediately_ preceed the nested `<ul>`.
+The `<button>` does not _immediately_ preceed the `<ul>`.
 
 ```html
 ...
@@ -136,52 +169,13 @@ The `<button>` does not _immediately_ preceed the nested `<ul>`.
 ```
 **👎 Bad**
 
-There is no `<button>` for the nested `<ul>`.
-
-You can specify the text that will be used for the buttons when on/off by
-adding the attributes `data-opened` or `data-closed`. You can add these to
-individual buttons, or to the top-level menu element (the element with
-`data-menu` or `class=".menu"` on it). If added to the top-level menu element,
-it will apply to all buttons. If added to an individual button, it will apply
-only to that button (and override a menu-level setting).
-
-> *Note*: You don't _have_ to include text in the buttons when you initially
-> define them, since the text will be replaced as soon as the site-navigation
-> is added as a custom element, but adding the text is encourage, so that your
-> site will still have descriptive HTML.
-
-#### Toggle Button Text Examples
-
-```html
-<nav data-opened="X" data-closed="=">
-  ...
-  <button data-toggle></button>
-  ...
-</nav>
-```
-
-This button will show `X` when the menu is open, and `=` when it is closed.
-
-```html
-<nav data-opened="X" data-closed="=">
-  ...
-  <button data-toggle></button>
-  ...
-  <button data-toggle data-opened="Close"></button>
-</nav>
-```
-
-The first button with behave like the button in the last example. The second
-will show `Close` when the menu is open, and `=` when it is closed.
-
-### Search
-
-The top-level element of this section must have either the attribute
-`data-search` or the class `search`. `data-search` is preferred.
+There is no `<button>` for the `<ul>`.
 
 ## Events
 
-site-navigation makes use of Custom Events in JavaScript to handle toggling
-buttons and opening/closing menus, etc. All of these events bubble up to the
-top site-navigation level, but no further. You can add event listeners to
-`<site-navigation>` to react to these events.
+Drawer dispatch events when their state should change, which all other parts of
+**site-navigation** hook into to do their thing. These events bubble up all the way to the
+`<site-navigation>` root element, but stop there (to avoid polluting the DOM). You can
+listen on the root element or to individual Drawers for the `drawer-state-change` event.
+The `detail` property on the event includes the element that displatched the event (`el`)
+and the state to which the drawer is being set (`action`).
