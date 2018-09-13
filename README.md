@@ -75,24 +75,25 @@ build a menu. An example might look this this:
 ```
 
 > **Note:** The above reflects a recommended layout: a `<nav>` nested in the master
-> `<site-navigation>` element, with `<div>`s as top-level drawers and `<ul>`s as nested
-> drawers. This is the easiest to understand, and the most accessible. **site-navigation**
+> `<site-navigation>` element, with `<div>`s as top-level Drawer(s) and `<ul>`s as nested
+> Drawers. This is the easiest to understand, and the most accessible. **site-navigation**
 > is flexible enough to support many different layouts, however, so long as you follow
 > the rules below.
 
 ### Drawers
 
-A Drawer is a section of content that will be hidden and show when its associated toggle
+A Drawer is a section of content that will be hidden and shown when its associated Toggle
 is clicked. A Drawer can contain whatever you want it to (even other Drawers!) but it will
-usually contain a list of navigational links. The rules for setting up a drawer are as follows:
+usually contain a list of navigational links. The rules for setting up a Drawer are as follows:
 
-1. Your drawer can be any block-level element, but it must meet one of the following criteria:
-  a. Have the attribute `data-drawer`
-  b. Directly follow a Toggle
-2. Your drawer must *directly preceeded* by a Toggle.
+1. Your Drawer can be any block-level element, but it must meet at least one of the following 
+criteria:
+   1. Have the attribute `data-drawer`
+   2. Directly follow a Toggle
+2. Your Drawer must be *directly preceeded* by a Toggle.
 
-Drawers represent the single source of truth about their state: Toggles take their stage
-from their associated drawers. This means that if you want to determine or set the state of
+Drawers represent the single source of truth about their state: Toggles take their state
+from their associated Drawers. This means that if you want to determine or set the state of
 a Drawer programmatically, you should do so through the Drawer itself, not a Toggle.
 **site-navigation** only recognizes Drawers and Toggles in pairs: If you have only one, it
 will simple ignore that element.
@@ -173,9 +174,9 @@ There is no `<button>` for the `<ul>`.
 
 ## Events
 
-Drawer dispatch events when their state should change, which all other parts of
+Drawers dispatch events when their state should change, which all other parts of
 **site-navigation** hook into to do their thing. These events bubble up all the way to the
-`<site-navigation>` root element, but stop there (to avoid polluting the DOM). You can
+`<site-navigation>` root element, but stop there (to avoid polluting the wider DOM). You can
 listen on the root element or to individual Drawers for the `drawer-state-change` event.
 The `detail` property on the event includes the element that displatched the event (`el`)
-and the state to which the drawer is being set (`action`).
+and the state to which the Drawer is being set (`action`).
