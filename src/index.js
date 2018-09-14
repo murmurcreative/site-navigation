@@ -9,6 +9,13 @@ if (!Element.prototype.matches) {
   Element.prototype.matches = Element.prototype.msMatchesSelector;
 }
 
+function getArgsWithDefaults(args, defaults) {
+  return Object.assign(
+    defaults,
+    typeof args === `object` ? args : {}
+  );
+}
+
 /**
  * Returns the nearest sibling to the passed element.
  *
@@ -16,20 +23,24 @@ if (!Element.prototype.matches) {
  * recommended.
  *
  * @param {HTMLElement} el - The current element
- * @param {string} [direction=`previous`] - Which direction to look
- * @param {string} [selector=null] - Should this match a selector
+ * @param {object} [options]
  */
-function getSibling(el, direction = `previous`, selector = null) {
+function getSibling(el, options) {
+  const parsedOptions = getArgsWithDefaults(options, {
+      direction: `previous`,
+      selector: null,
+    });
+
   let sibling = null;
 
-  if (direction === `previous`) {
+  if (parsedOptions.direction === `previous`) {
     sibling = el.previousElementSibling;
-  } else if (direction === `next`) {
+  } else if (parsedOptions.direction === `next`) {
     sibling = el.nextElementSibling;
   }
 
-  if (selector !== null) {
-    if (!sibling.matches(selector)) {
+  if (parsedOptions.selector !== null) {
+    if (!sibling.matches(parsedOptions.selector)) {
       return getSibling(sibling);
     }
   }
@@ -50,7 +61,7 @@ function getToggleElements(navigation) {
  * @param {HTMLElement} drawer
  */
 function getDrawerToggle(drawer) {
-  return getSibling(drawer, `previous`, `[data-toggle]`);
+  return getSibling(drawer, { direction: `previous`, selector:`[data-toggle]` });
 }
 
 /**
@@ -58,12 +69,11 @@ function getDrawerToggle(drawer) {
  * @param {HTMLElement} toggle
  */
 function getToggleDrawer(toggle) {
-  return getSibling(toggle, `next`, `[data-drawer], ul`);
+  return getSibling(toggle, { direction: `next`, selector: `[data-drawer], ul` });
 }
 
 /**
  * Fire the event that tells us a drawer should change state.
- * @param {HTMLElement} drawer
  */
 function doDispatchDrawerStateEvent() {
   const drawer = this;
@@ -167,11 +177,11 @@ function doApplyNavigationClasses(navigation) {
 
   navigation.classList.add(`${elName}`);
 
-  Array.from(getToggleElements(navigation), (toggle) => {
+  Array.prototype.forEach.call(getToggleElements(navigation), (toggle) => {
     const drawer = getToggleDrawer(toggle);
     toggle.classList.add(`${elName}__toggle`);
     drawer.classList.add(`${elName}__drawer`);
-    Array.from(drawer.querySelectorAll(`li`), (item) => {
+    Array.prototype.forEach.call(drawer.querySelectorAll(`li`), (item) => {
       item.classList.add(`${elName}__item`);
       if (item.querySelector(`ul`)) {
         item.classList.add(`${elName}__parent`);
@@ -185,7 +195,7 @@ function doApplyNavigationClasses(navigation) {
  * @param {HTMLElement} navigation
  */
 function doNavigationSetup(navigation) {
-  Array.from(getToggleElements(navigation), (toggle) => {
+  Array.prototype.forEach.call(getToggleElements(navigation), (toggle) => {
     doBindStateChangeToDrawer(getToggleDrawer(toggle));
 
     doListenForDrawerChangeEvent(getToggleDrawer(toggle));
@@ -196,7 +206,7 @@ function doNavigationSetup(navigation) {
   });
 }
 
-const SiteNavigation = document.registerElement(
+document.registerElement(
   `site-navigation`,
   {
     prototype: Object.create(
@@ -212,15 +222,6 @@ const SiteNavigation = document.registerElement(
             // Prevent events from leaking out into the wider DOM.
             [`drawer-state-change`]
               .map(event => this.addEventListener(event, e => e.cancelBubble = true))
-          },
-        },
-        detachedCallback: {
-          value: function () {
-          },
-        },
-        attributeChangedCallback: {
-          value: function (name, previousValue, value) {
-            // Current nothing
           },
         },
       }),
