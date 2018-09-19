@@ -82,12 +82,11 @@ function getToggleDrawer(toggle) {
 /**
  * Fire the event that tells us a drawer should change state.
  */
-function doDispatchDrawerStateEvent() {
-  const drawer = this;
+function doDispatchDrawerStateEvent(drawer, open) {
   drawer.dispatchEvent(new CustomEvent(`drawer-state-change`, {
     "bubbles": true, "cancelable": true, "detail": {
       el: drawer,
-      action: drawer.hasAttribute(`hidden`) ? `open` : `close`,
+      action: open ? `open` : `close`,
     },
   }));
 }
