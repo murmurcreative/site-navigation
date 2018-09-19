@@ -9,6 +9,13 @@ if (!Element.prototype.matches) {
   Element.prototype.matches = Element.prototype.msMatchesSelector;
 }
 
+/**
+ * A function that allows us to set defaults without having to polyfill
+ * *actual* function defaults in browsers that don't support them.
+ * @param {object} args
+ * @param {object} defaults
+ * @returns {object}
+ */
 function getArgsWithDefaults(args, defaults) {
   return Object.assign(
     defaults,
