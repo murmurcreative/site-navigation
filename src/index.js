@@ -92,31 +92,30 @@ function doDispatchDrawerStateEvent(drawer, open) {
 }
 
 /**
- * Do things required to close drawer.
+ * Adjust the visibility property for this drawer.
+ *
+ * @param {HTMLElement} drawer The drawer to take this action on.
+ * @param {boolean} open Open this drawer (true) or close it (false).
  */
-function doCloseDrawer() {
-  this.setAttribute(`hidden`, ``);
-  doSetToggleState(getDrawerToggle(this), false);
+function doSetDrawerVisibility(drawer, open) {
+  open ? drawer.removeAttribute(`hidden`) : drawer.setAttribute(`hidden`, ``);
 }
 
 /**
- * Do things required to opern drawer.
+ * This function fires off several others that do the actual work of
+ * changing the state of a drawer (as well as the toggle). All actions
+ * taken by this function should be functional in the sense that they
+ * do not depend on the state of the objects they're targeting. (The
+ * exception to this is `doSetToggleState()` which must query the DOM
+ * to determine the correct toggle button).
+ *
+ * @param {HTMLElement} drawer The drawer to take this action on.
+ * @param {boolean} open Open this drawer (true) or close it (false).
  */
-function doOpenDrawer() {
-  this.removeAttribute(`hidden`);
-  doSetToggleState(getDrawerToggle(this), true);
-}
-
-/**
- * Swaps the "open" state of the drawer.
- * @param {HTMLElement} drawer
- */
-function doSwapDrawerState(drawer) {
-  if (drawer.hasAttribute(`hidden`)) {
-    drawer.openDrawer();
-  } else {
-    drawer.closeDrawer();
-  }
+function doSetDrawerState(drawer, open) {
+  doDispatchDrawerStateEvent(drawer, open);
+  doSetDrawerVisibility(drawer, open);
+  doSetToggleState(getDrawerToggle(drawer), open);
 }
 
 /**
@@ -152,21 +151,9 @@ function doListenForToggleClick(toggle) {
  * @param {HTMLElement} drawer
  */
 function doBindStateChangeToDrawer(drawer) {
-  drawer.openDrawer = doOpenDrawer.bind(drawer);
-  drawer.closeDrawer = doCloseDrawer.bind(drawer);
-  drawer.toggleDrawer = doDispatchDrawerStateEvent.bind(drawer);
-}
-
-/**
- * If *this* drawer fired off the state change, toggle the drawer state.
- * @param {HTMLElement} drawer
- */
-function doListenForDrawerChangeEvent(drawer) {
-  drawer.addEventListener(`drawer-state-change`, (e) => {
-    if (drawer === e.detail.el) {
-      doSwapDrawerState(drawer);
-    }
-  });
+  drawer.openDrawer = () => doSetDrawerState(drawer, true);
+  drawer.closeDrawer = () => doSetDrawerState(drawer, false);
+  drawer.toggleDrawer = () => doSetDrawerState(drawer, drawer.hasAttribute(`hidden`));
 }
 
 /**
@@ -203,8 +190,6 @@ function doApplyNavigationClasses(navigation) {
 function doNavigationSetup(navigation) {
   Array.prototype.forEach.call(getToggleElements(navigation), (toggle) => {
     doBindStateChangeToDrawer(getToggleDrawer(toggle));
-
-    doListenForDrawerChangeEvent(getToggleDrawer(toggle));
 
     doResetToggleState(toggle);
 
