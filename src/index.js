@@ -119,7 +119,7 @@ function doSwapDrawerState(drawer) {
  * @param {boolean} open - Whether or not this button is pressed
  */
 function doSetToggleState(toggle, open) {
-  toggle.setAttribute(`aria-expanded`, open);
+  toggle.setAttribute(`aria-expanded`, String(open));
 }
 
 /**
@@ -129,7 +129,7 @@ function doSetToggleState(toggle, open) {
  * @param {HTMLElement} toggle
  */
 function doResetToggleState(toggle) {
-  toggle.setAttribute(`aria-expanded`, !getToggleDrawer(toggle).hasAttribute(`hidden`));
+  toggle.setAttribute(`aria-expanded`, String(!getToggleDrawer(toggle).hasAttribute(`hidden`)));
 }
 
 /**
