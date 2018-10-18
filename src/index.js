@@ -197,24 +197,26 @@ function doNavigationSetup(navigation) {
   });
 }
 
-document.registerElement(
-  `site-navigation`,
-  {
-    prototype: Object.create(
-      HTMLElement.prototype, {
-        createdCallback: {
-          value: function () {
-            doNavigationSetup(this);
-          },
-        },
-        attachedCallback: {
-          value: function () {
-            doApplyNavigationClasses(this);
-            // Prevent events from leaking out into the wider DOM.
-            [`drawer-state-change`]
-              .map(event => this.addEventListener(event, e => e.cancelBubble = true))
-          },
-        },
-      }),
+class SiteNavigation extends HTMLElement {
+  constructor(self) {
+    /**
+     * Using `self` rather than `this` here is because of disappointing support for CustomElements V1
+     * @link https://github.com/WebReflection/document-register-element#v1-caveat
+     */
+    self = super(self);
+    doNavigationSetup(self);
+    return self;
   }
+
+  connectedCallback() {
+    doApplyNavigationClasses(this);
+    // Prevent events from leaking out into the wider DOM.
+    [`drawer-state-change`]
+      .map(event => this.addEventListener(event, e => e.cancelBubble = true))
+  }
+}
+
+customElements.define(
+  `site-navigation`,
+  SiteNavigation
 );
