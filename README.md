@@ -32,7 +32,7 @@ exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites))/],
 
 //...to this:
 
-test: /\.css$/,
+test: /\.js$/,
 exclude: [/node_modules(?![/|\\](bootstrap|foundation-sites|site-navigation))/],
 ```
 
