@@ -43,9 +43,9 @@ build a menu. An example might look this this:
 
 ```html
 <site-navigation>
-  <nav>
+  <nav>    
+    <button data-toggle>Open</button>
     <div data-drawer>
-      <button data-toggle>Open</button>
       <ul>
         <li>
           <a href="/home/">Home</a>
