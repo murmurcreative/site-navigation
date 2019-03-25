@@ -11,7 +11,7 @@ for instance), but the following is the recommended process (i.e. the one I've
 tested):
 
 ```bash
-$ https://www.npmjs.com/package/@murmurcreative/site-navigation
+$ npm i @murmurcreative/site-navigation
 ```
 
 ```javascript
