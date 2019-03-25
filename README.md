@@ -11,12 +11,12 @@ for instance), but the following is the recommended process (i.e. the one I've
 tested):
 
 ```bash
-$ yarn add https://github.com/alwaysblank/site-navigation.git
+$ https://www.npmjs.com/package/@murmurcreative/site-navigation
 ```
 
 ```javascript
 // main.js, or a script that will be run on all pages
-import 'site-navigation';
+import '@murmurcreative/site-navigation';
 ```
 
 If you're using webpack, you'll need to make sure that your loaders for `js`
