@@ -107,6 +107,8 @@ to handle opening and closing Drawers:
 - `openDrawer()` - Opens the Drawer. Has no effect if the Drawer is already open.
 - `closeDrawer()` - Closes the Drawer. Has no effect if the Drawer is already closed.
 
+Each of these functions also has a "silent" variant, which means that the event will not bubble up to the parent event: It will only fire on itself. This can be useful if you're doing something that manipulates drawer state based on the state of another drawer (otherwise you can get a lot of recursion).
+
 ##### Example
 
 ```js
@@ -120,6 +122,10 @@ document.getElementByID(`location-list`).openDrawer();
 
 document.getElementByID(`location-list`).closeDrawer();
 // The Drawer is now closed.
+
+document.getElementByID(`location-list`).openDrawerSilently();
+// The drawer is now open, but the parent <site-navigation> was 
+// not notified.
 ```
 
 ### Toggles

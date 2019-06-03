@@ -82,9 +82,9 @@ function getToggleDrawer(toggle) {
 /**
  * Fire the event that tells us a drawer should change state.
  */
-function doDispatchDrawerStateEvent(drawer, open) {
+function doDispatchDrawerStateEvent(drawer, open, bubbles) {
   drawer.dispatchEvent(new CustomEvent(`drawer-state-change`, {
-    "bubbles": true, "cancelable": true, "detail": {
+    "bubbles": bubbles, "cancelable": true, "detail": {
       el: drawer,
       action: open ? `open` : `close`,
     },
@@ -111,9 +111,11 @@ function doSetDrawerVisibility(drawer, open) {
  *
  * @param {HTMLElement} drawer The drawer to take this action on.
  * @param {boolean} open Open this drawer (true) or close it (false).
+ * @param bubbles
  */
-function doSetDrawerState(drawer, open) {
-  doDispatchDrawerStateEvent(drawer, open);
+function doSetDrawerState(drawer, open, bubbles) {
+  console.log(bubbles);
+  doDispatchDrawerStateEvent(drawer, open, bubbles);
   doSetDrawerVisibility(drawer, open);
   doSetToggleState(getDrawerToggle(drawer), open);
 }
@@ -151,9 +153,12 @@ function doListenForToggleClick(toggle) {
  * @param {HTMLElement} drawer
  */
 function doBindStateChangeToDrawer(drawer) {
-  drawer.openDrawer = () => doSetDrawerState(drawer, true);
-  drawer.closeDrawer = () => doSetDrawerState(drawer, false);
-  drawer.toggleDrawer = () => doSetDrawerState(drawer, drawer.hasAttribute(`hidden`));
+  drawer.openDrawer = () => doSetDrawerState(drawer, true, true);
+  drawer.closeDrawer = () => doSetDrawerState(drawer, false, true);
+  drawer.toggleDrawer = () => doSetDrawerState(drawer, drawer.hasAttribute(`hidden`), true);
+  drawer.openDrawerSilently = () => doSetDrawerState(drawer, true, false);
+  drawer.closeDrawerSilently = () => doSetDrawerState(drawer, false, false);
+  drawer.toggleDrawerSilently = () => doSetDrawerState(drawer, drawer.hasAttribute(`hidden`), false);
 }
 
 /**
