@@ -114,7 +114,6 @@ function doSetDrawerVisibility(drawer, open) {
  * @param bubbles
  */
 function doSetDrawerState(drawer, open, bubbles) {
-  console.log(bubbles);
   doDispatchDrawerStateEvent(drawer, open, bubbles);
   doSetDrawerVisibility(drawer, open);
   doSetToggleState(getDrawerToggle(drawer), open);
