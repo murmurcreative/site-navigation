@@ -1,7 +1,7 @@
 module.exports = {
   plugins: {
     'postcss-import': {},
-    'postcss-cssnext': {},
-    'cssnano': {}
-  }
+    'postcss-preset-env': {},
+    'cssnano': {},
+  },
 }

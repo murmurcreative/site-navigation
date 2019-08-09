@@ -22,7 +22,6 @@
     "eslint-plugin-import": "^2.10.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "postcss": "^6.0.16",
-    "postcss-cssnext": "^3.0.2",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.10",
     "style-loader": "^0.19.1",
@@ -34,6 +33,7 @@
   },
   "dependencies": {
     "custom-event-polyfill": "^0.3.0",
-    "document-register-element": "^1.11.1"
+    "document-register-element": "^1.11.1",
+    "postcss-preset-env": "^6.7.0"
   }
 }
