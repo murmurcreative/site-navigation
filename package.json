@@ -1,6 +1,6 @@
 {
   "name": "@murmurcreative/site-navigation",
-  "version": "2.1.1",
+  "version": "2.2.2",
   "description": "",
   "main": "src/index.js",
   "scripts": {
